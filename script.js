@@ -17,19 +17,50 @@ if (menuToggle && navLinks) {
     });
 }
 
-// Gallery Video Playback
+// Gallery Video Playback & Fullscreen
 document.querySelectorAll('.video-card video').forEach(video => {
+    // Play/Pause on click
     video.addEventListener('click', () => {
-        if (video.paused) {
-            video.play();
-            video.muted = false; // Unmute on click to show work sounds
-            video.parentElement.querySelector('.play-hint').textContent = '|| Pause';
-        } else {
-            video.pause();
-            video.parentElement.querySelector('.play-hint').textContent = '▶ Play';
-        }
+        togglePlay(video);
     });
+
+    // Fullscreen button
+    const container = video.parentElement;
+    const fsBtn = container.querySelector('.fs-btn');
+    if (fsBtn) {
+        fsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) { /* Safari */
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) { /* IE11 */
+                video.msRequestFullscreen();
+            }
+        });
+    }
 });
+
+function togglePlay(video) {
+    const hint = video.parentElement.querySelector('.play-hint');
+    if (video.paused) {
+        // Pause other videos
+        document.querySelectorAll('video').forEach(v => {
+            if (v !== video) {
+                v.pause();
+                const otherHint = v.parentElement.querySelector('.play-hint');
+                if (otherHint) otherHint.textContent = '▶ Play';
+            }
+        });
+        
+        video.play();
+        video.muted = false;
+        if (hint) hint.textContent = '|| Pause';
+    } else {
+        video.pause();
+        if (hint) hint.textContent = '▶ Play';
+    }
+}
 
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
