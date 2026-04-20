@@ -17,6 +17,20 @@ if (menuToggle && navLinks) {
     });
 }
 
+// Gallery Video Playback
+document.querySelectorAll('.video-card video').forEach(video => {
+    video.addEventListener('click', () => {
+        if (video.paused) {
+            video.play();
+            video.muted = false; // Unmute on click to show work sounds
+            video.parentElement.querySelector('.play-hint').textContent = '|| Pause';
+        } else {
+            video.pause();
+            video.parentElement.querySelector('.play-hint').textContent = '▶ Play';
+        }
+    });
+});
+
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
