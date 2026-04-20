@@ -1,0 +1,44 @@
+// Smooth scrolling for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+
+// Simple Scroll Reveal Animation
+const observerOptions = {
+    threshold: 0.1
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('reveal-active');
+            observer.unobserve(entry.target);
+        }
+    });
+}, observerOptions);
+
+// Add reveal classes to elements
+document.addEventListener('DOMContentLoaded', () => {
+    const revealElements = document.querySelectorAll('.service-card, .section-title, .check-list li, .image-box');
+    
+    revealElements.forEach(el => {
+        el.classList.add('reveal');
+        observer.observe(el);
+    });
+});
+
+// Dynamic header background on scroll
+window.addEventListener('scroll', () => {
+    const header = document.getElementById('main-header');
+    if (window.scrollY > 50) {
+        header.classList.add('header-scroll');
+    } else {
+        header.classList.remove('header-scroll');
+    }
+});
